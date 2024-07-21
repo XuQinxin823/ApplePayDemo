@@ -22,17 +22,17 @@ router.post("/validateSession", async (request, response) => {
         let httpsAgent = new https.Agent({
             rejectUnauthorized: false,
             cert: await fs.promises.readFile(
-                path.join(__dirname, "../certificates/cert.pem")
+                path.join(__dirname, "../Certificates/certificate_sandbox.pem")
             ),
             key: await fs.promises.readFile(
-                path.join(__dirname, "../certificates/key.pem")
+                path.join(__dirname, "../Certificates/certificate_sandbox.key")
             )
         });
 
         let axiosResponse = await axios.post(
             appleUrl,
             {
-                merchantIdentifier: "",
+                merchantIdentifier: "merchant.com.xuqinxintestdomain.sandbox",
                 domainName: "XuQinxin823.github.io",
                 displayName: "Good try"
             },
