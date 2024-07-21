@@ -1,4 +1,4 @@
-const MERCHANT_ID = "merchant.test.example.com";
+const MERCHANT_ID = "merchant.com.xuqinxintestdomain.sandbox";
 const BACKEND_URL_VALIDATE_SESSION = window.location.href + "validateSession";
 const BACKEND_URL_PAY = window.location.href + "pay";
 
