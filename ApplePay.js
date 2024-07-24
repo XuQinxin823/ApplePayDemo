@@ -30,7 +30,7 @@ appleButton.addEventListener("click", function () {
         total: { label: "ApplePay Test Demo", amount: "1.00" },
         requiredBillingContactFields: ["postalAddress"]
     });
-    
+
     // Start Apple Pay session
     applePaySession.begin();
 
@@ -74,31 +74,83 @@ appleButton.addEventListener("click", function () {
 
 });
 
-// Function to validate Apple Pay session with backend
+// // Function to validate Apple Pay session with backend
+// function validateTheSession(theValidationURL, callback) {
+//     axios.post(
+//         BACKEND_URL_VALIDATE_SESSION,
+//         { appleUrl: theValidationURL },
+//         { headers: { "Access-Control-Allow-Origin": "*" } }
+//     ).then(function (response) {
+//         callback(response.data);
+//     }).catch(function (error) {
+//         console.error('Error validating Apple Pay session:', error);
+//     });
+// }
+
 function validateTheSession(theValidationURL, callback) {
-    axios.post(
-        BACKEND_URL_VALIDATE_SESSION,
-        { appleUrl: theValidationURL },
-        { headers: { "Access-Control-Allow-Origin": "*" } }
-    ).then(function (response) {
-        callback(response.data);
-    }).catch(function (error) {
+    fetch(BACKEND_URL_VALIDATE_SESSION, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({ appleUrl: theValidationURL })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        callback(data);
+    })
+    .catch(error => {
         console.error('Error validating Apple Pay session:', error);
     });
 }
 
-// Function to process payment with backend
+
+// // Function to process payment with backend
+// function pay(applePaymentToken, billingAddress, callback) {
+//     axios.post(
+//         BACKEND_URL_PAY,
+//         {
+//             token: applePaymentToken,
+//             billingAddress: billingAddress
+//         },
+//         { headers: { "Access-Control-Allow-Origin": "*" } }
+//     ).then(function (response) {
+//         callback(response.data);
+//     }).catch(function (error) {
+//         console.error('Error processing Apple Pay payment:', error);
+//     });
+// }
+
+// Function to process payment with backend using Fetch API
 function pay(applePaymentToken, billingAddress, callback) {
-    axios.post(
-        BACKEND_URL_PAY,
-        {
+    fetch(BACKEND_URL_PAY, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({
             token: applePaymentToken,
             billingAddress: billingAddress
-        },
-        { headers: { "Access-Control-Allow-Origin": "*" } }
-    ).then(function (response) {
-        callback(response.data);
-    }).catch(function (error) {
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        callback(data);
+    })
+    .catch(error => {
         console.error('Error processing Apple Pay payment:', error);
     });
 }
+
