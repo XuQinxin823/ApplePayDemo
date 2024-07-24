@@ -27,12 +27,13 @@ appleButton.addEventListener("click", function () {
         currencyCode: "USD",
         supportedNetworks: ["visa"],
         merchantCapabilities: ["supports3DS"],
-        total: { label: "Good try", amount: "1.00" },
+        total: { label: "ApplePay Test Demo", amount: "1.00" },
         requiredBillingContactFields: ["postalAddress"]
     });
+    
     // Start Apple Pay session
     applePaySession.begin();
-    
+
     // Event handler for merchant validation
     applePaySession.onvalidatemerchant = function (event) {
         const validationURL = event.validationURL;
