@@ -30,7 +30,9 @@ appleButton.addEventListener("click", function () {
         total: { label: "Good try", amount: "1.00" },
         requiredBillingContactFields: ["postalAddress"]
     });
-
+    // Start Apple Pay session
+    applePaySession.begin();
+    
     // Event handler for merchant validation
     applePaySession.onvalidatemerchant = function (event) {
         const validationURL = event.validationURL;
@@ -69,8 +71,6 @@ appleButton.addEventListener("click", function () {
         });
     };
 
-    // Start Apple Pay session
-    applePaySession.begin();
 });
 
 // Function to validate Apple Pay session with backend
