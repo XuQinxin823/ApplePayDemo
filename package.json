@@ -1,0 +1,25 @@
+{
+  "name": "xuqinxin823.github.io",
+  "version": "1.0.0",
+  "description": "ApplePay Demo for Checkout",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XuQinxin823/XuQinxin823.github.io.git"
+  },
+  "keywords": [
+    "ApplePay",
+    "Demo",
+    "for",
+    "Checkout"
+  ],
+  "author": "Xuqinxin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XuQinxin823/XuQinxin823.github.io/issues"
+  },
+  "homepage": "https://github.com/XuQinxin823/XuQinxin823.github.io#readme"
+}
