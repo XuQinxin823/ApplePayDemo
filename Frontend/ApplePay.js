@@ -1,23 +1,23 @@
 const MERCHANT_ID = "merchant.com.xuqinxintestdomain.sandbox";
-const BACKEND_URL_VALIDATE_SESSION = window.location.href + "validateSession";
+const BACKEND_URL_VALIDATE_SESSION = window.location.href + "paymentSession";
 const BACKEND_URL_PAY = window.location.href + "pay";
 
 // Select Apple Pay button element
 const appleButton = document.querySelector(".apple-pay-button");
 
-// // Function to check if Apple Pay is available and update button visibility
-// function checkApplePayAvailability() {
-//     if (window.ApplePaySession && ApplePaySession.canMakePayments(MERCHANT_ID)) {
-//         // Show the Apple Pay button
-//         appleButton.style.display = 'block';
-//     } else {
-//         // Hide the Apple Pay button if not available
-//         appleButton.style.display = 'none';
-//     }
-// }
-//
-// // Check Apple Pay availability on page load
-// checkApplePayAvailability();
+// Function to check if Apple Pay is available and update button visibility
+function checkApplePayAvailability() {
+    if (window.ApplePaySession && ApplePaySession.canMakePayments(MERCHANT_ID)) {
+        // Show the Apple Pay button
+        appleButton.style.display = 'block';
+    } else {
+        // Hide the Apple Pay button if not available
+        appleButton.style.display = 'none';
+    }
+}
+
+// Check Apple Pay availability on page load
+checkApplePayAvailability();
 
 // Apple Pay button click handler
 appleButton.addEventListener("click", function () {
