@@ -12,7 +12,6 @@ app.use('/api', apiRoutes);
 
 // Serve static files from the 'frontend' directory
 app.use(express.static('Frontend'));
-app.use(express.static('.well-known'));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/Frontend/index.html');

@@ -16,7 +16,7 @@ router.get("/", (request, response) => {
 });
 
 //Validate the Apple Pay session
-router.post("/paymentSession", async (request, response) => {
+router.post("/validateSession", async (request, response) => {
     // Get the URL from the front end
     const { appleUrl } = request.body;
 
