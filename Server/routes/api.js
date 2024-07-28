@@ -1,12 +1,15 @@
-//nconst axios = require("axios");
+//const axios = require("axios");
+const fetch = require('node-fetch');
 const https = require("https");
 const { Checkout } = require("checkout-sdk-node");
 const fs = require("fs");
 var express = require("express");
 var path = require("path");
 var router = express.Router();
+const ckoAPI = 'https://api.sandbox.checkout.com/'; // Replace with the correct API endpoint
+const ckoSK = 'sk_sbox_fml2lnajshvyzujlntuunbg7iay'; // Replace with your Checkout.com secret key
 
-var cko = new Checkout("sk_sbox_fml2lnajshvyzujlntuunbg7iay",{pk:"pk_sbox_mbqioufmvwkamz3jjewh7o5aji#"});
+//var cko = new Checkout("sk_sbox_fml2lnajshvyzujlntuunbg7iay",{pk:"pk_sbox_mbqioufmvwkamz3jjewh7o5aji#"});
 
 // Display the HTML page by default
 router.get("/", (request, response) => {
@@ -14,68 +17,170 @@ router.get("/", (request, response) => {
 });
 
 //Validate the Apple Pay session
+// router.post("/validateSession", async (request, response) => {
+//     // Get the URL from the front end
+//     const { appleUrl } = request.body;
+
+//     try {
+//         let httpsAgent = new https.Agent({
+//             rejectUnauthorized: false,
+//             cert: await fs.promises.readFile(
+//                 path.join(__dirname, "../Certificates/certificate_sandbox.pem")
+//             ),
+//             key: await fs.promises.readFile(
+//                 path.join(__dirname, "../Certificates/certificate_sandbox.key")
+//             )
+//         });
+
+//         let axiosResponse = await axios.post(
+//             appleUrl,
+//             {
+//                 merchantIdentifier: "merchant.com.xuqinxintestdomain.sandbox",
+//                 domainName: "xuqinxin823-github-io.onrender.com",
+//                 displayName: "merchant id for test environment"
+//             },
+//             {
+//                 httpsAgent
+//             }
+//         );
+
+//         response.send(axiosResponse.data);
+//     } catch (error) {
+//         console.error('Error:', error);
+//         response.status(500).send(error);
+//     }
+// });
+
 router.post("/validateSession", async (request, response) => {
-    // Get the URL from the front end
     const { appleUrl } = request.body;
 
     try {
-        let httpsAgent = new https.Agent({
-            rejectUnauthorized: false,
-            cert: await fs.promises.readFile(
-                path.join(__dirname, "../Certificates/certificate_sandbox.pem")
-            ),
-            key: await fs.promises.readFile(
-                path.join(__dirname, "../Certificates/certificate_sandbox.key")
-            )
-        });
-
-        let axiosResponse = await axios.post(
-            appleUrl,
-            {
-                merchantIdentifier: "merchant.com.xuqinxintestdomain.sandbox",
-                domainName: "XuQinxin823.github.io",
-                displayName: "Good try"
-            },
-            {
-                httpsAgent
-            }
+        const cert = await fs.readFile(
+            path.join(__dirname, "../Certificates/certificate_sandbox.pem")
+        );
+        const key = await fs.readFile(
+            path.join(__dirname, "../Certificates/certificate_sandbox.key")
         );
 
-        response.send(axiosResponse.data);
+        const httpsAgent = new https.Agent({
+            rejectUnauthorized: false,
+            cert,
+            key
+        });
+
+        const fetchResponse = await fetch(appleUrl, {
+            method: 'POST',
+            body: JSON.stringify({
+                merchantIdentifier: "merchant.com.xuqinxintestdomain.sandbox",
+                domainName: "xuqinxin823-github-io.onrender.com",
+                displayName: "merchant id for test environment"
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            agent: httpsAgent
+        });
+
+        if (!fetchResponse.ok) {
+            throw new Error(`HTTP error! status: ${fetchResponse.status}`);
+        }
+
+        const data = await fetchResponse.json();
+        response.send(data);
     } catch (error) {
         console.error('Error:', error);
-        response.status(500).send(error);
+        response.status(500).send(error.message);
     }
 });
 
+// router.post("/pay", async (request, response) => {
+//     // Get the URL from the front end
+//     const { version, data, signature, header } = request.body.token.paymentData;
+
+//     let checkoutToken = await cko.tokens.request({
+//         type: "applepay",
+//         token_data:{
+//          version: version,
+//          data: data,
+//          signature: signature,
+//          header:{
+//               ephemeralPublicKey: header.ephemeralPublicKey,
+//               publicKeyHash: header.publicKeyHash,
+//               transactionId: header.transactionId
+//          }
+//         }
+//     });
+
+//     const payment = await cko.payments.request({
+//     source:{
+//         token: checkoutToken.token_data
+//     },
+//         amount: 1000,
+//         currency: "USD"
+//     });
+
+//     response.send(payment);
+// });
+
+
 router.post("/pay", async (request, response) => {
-    // Get the URL from the front end
     const { version, data, signature, header } = request.body.token.paymentData;
 
-    let checkoutToken = await cko.tokens.request({
-        type: "applepay",
-        token_data:{
-         version: version,
-         data: data,
-         signature: signature,
-         header:{
-              ephemeralPublicKey: header.ephemeralPublicKey,
-              publicKeyHash: header.publicKeyHash,
-              transactionId: header.transactionId
-         }
+    try {
+        // Request an Apple Pay token
+        let checkoutTokenResponse = await fetch(`${ckoAPI}/tokens`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `sk_${ckoSK}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                type: "applepay",
+                token_data: {
+                    version: version,
+                    data: data,
+                    signature: signature,
+                    header: {
+                        ephemeralPublicKey: header.ephemeralPublicKey,
+                        publicKeyHash: header.publicKeyHash,
+                        transactionId: header.transactionId
+                    }
+                }
+            })
+        });
+
+        if (!checkoutTokenResponse.ok) {
+            throw new Error(`Error creating token: ${checkoutTokenResponse.statusText}`);
         }
-    });
 
-    const payment = await cko.payments.request({
-    source:{
-        token: checkoutToken.token_data
-    },
-        amount: 1000,
-        currency: "USD"
-    });
+        let checkoutToken = await checkoutTokenResponse.json();
 
-    response.send(payment);
-});
+        // Process the payment
+        let paymentResponse = await fetch(`${ckoAPI}/payments`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `sk_${ckoSK}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                source: {
+                    token: checkoutToken.token_data
+                },
+                amount: 1000,
+                currency: "USD"
+            })
+        });
+
+        if (!paymentResponse.ok) {
+            throw new Error(`Error processing payment: ${paymentResponse.statusText}`);
+        }
+
+        let payment = await paymentResponse.json();
+        response.send(payment);
+    } catch (error) {
+        console.error('Error:', error);
+        response.status(500).send(error.message);
+    }
 
 module.exports = router;
 
