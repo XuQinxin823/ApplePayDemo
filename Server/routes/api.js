@@ -94,7 +94,7 @@ router.post("/pay", async (request, response) => {
             },
             amount: 1000,
             currency: "USD",
-            processing_channel_id: "pc_zs5fqhybzc2e3jmq3efvybybpq"
+            processing_channel_id: "pc_scd3wmeis4oevodpoaoridge64"
         });
         console.error("payment");
         console.error(payment);
