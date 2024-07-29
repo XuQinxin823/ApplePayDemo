@@ -18,6 +18,7 @@ router.get("/", (request, response) => {
 
 //Validate the Apple Pay session
 router.post("/validateSession", async (request, response) => {
+    console.log("/validateSession")
     // Get the URL from the front end
     const { appleUrl } = request.body;
 
@@ -44,6 +45,7 @@ router.post("/validateSession", async (request, response) => {
             }
         );
 
+        console.log(axiosResponse.data);
         response.send(axiosResponse.data);
     } catch (error) {
         console.error('Error:', error);
@@ -52,7 +54,9 @@ router.post("/validateSession", async (request, response) => {
 });
 
 router.post("/pay", async (request, response) => {
+    console.log("/pay");
     const { version, data, signature, header } = request.body.token.paymentData;
+    console.error(version);
 
     try {
         // Request an Apple Pay token
@@ -130,10 +134,13 @@ router.post("/pay", async (request, response) => {
         }
 
         let payment = await paymentResponse.json();
+        console.log(payment);
         response.send(payment);
     } catch (error) {
         console.error('Error:', error);
         response.status(500).send(error.message);
-}});
+}
+}
+);
 
 module.exports = router;
