@@ -1,6 +1,6 @@
 const MERCHANT_ID = "merchant.com.xuqinxintestdomain.sandbox";
-const BACKEND_URL_VALIDATE_SESSION = window.location.href + "/api/validateSession";
-const BACKEND_URL_PAY = window.location.href + "/api/pay";
+const BACKEND_URL_VALIDATE_SESSION = window.location.href + "api/validateSession";
+const BACKEND_URL_PAY = window.location.href + "api/pay";
 
 // Select Apple Pay button element
 const appleButton = document.querySelector(".apple-pay-button");
