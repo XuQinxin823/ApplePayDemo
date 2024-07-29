@@ -58,7 +58,8 @@ router.post("/pay", async (request, response) => {
     const { version, data, signature, header } = request.body.token.paymentData;
     console.error(version);
 
-    try {
+    //try
+    //{
         // Request an Apple Pay token
         let checkoutTokenResponse = await cko.tokens.request({
         // let checkoutTokenResponse = await axios.post(`${ckoAPI}/tokens`, {
@@ -83,68 +84,83 @@ router.post("/pay", async (request, response) => {
         console.error("checkoutTokenResponse")
         console.log(checkoutTokenResponse);
 
-        if (!checkoutTokenResponse.ok) {
-            throw new Error(`Error creating token: ${checkoutTokenResponse.statusText}`);
-        }
-
-        let checkoutToken = await checkoutTokenResponse.json();
-
-        // Process the payment
-        let paymentResponse = await axios.post(`${ckoAPI}/payments`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `sk_${ckoSK}`,
-                'Content-Type': 'application/json'
+        // if (!checkoutTokenResponse.ok) {
+        //     throw new Error(`Error creating token: ${checkoutTokenResponse.statusText}`);
+        // }
+        
+        const payment = cko.payments.request({
+            source: {
+                token: checkoutToken.token_data
             },
-            body: JSON.stringify({
-                source: {
-                    token: checkoutToken.token_data
-                },
-                amount: 1000,
-                currency: "USD"
-            })
+            amount: 1000,
+            currency: "USD"
         });
-        console.error("payment")
-        console.log(paymentResponse)
-
-
-// router.post("/pay", async (request, response) => {
-//     // Get the URL from the front end
-//     const { version, data, signature, header } = request.body.token.paymentData;
-
-//     let checkoutToken = await cko.tokens.request({
-//         type: "applepay",
-//         token_data:{
-//          version: version,
-//          data: data,
-//          signature: signature,
-//          header:{
-//               ephemeralPublicKey: header.ephemeralPublicKey,
-//               publicKeyHash: header.publicKeyHash,
-//               transactionId: header.transactionId
-//          }
-//         }
-//     });
-
-//     const payment = await cko.payments.request({
-//     source:{
-//         token: checkoutToken.token_data
-//     },
-//         amount: 1000,
-//         currency: "USD"
-//     });
-        if (!paymentResponse.ok) {
-            throw new Error(`Error processing payment: ${paymentResponse.statusText}`);
-        }
-
-        let payment = await paymentResponse.json();
-        console.log(payment);
+        console.error("payment");
+        console.error(payment);
         response.send(payment);
-    } catch (error) {
-        console.error('Error:', error);
-        response.status(500).send(error.message);
-}
-}
-);
+
+});
+
+
+
+//         let checkoutToken = await checkoutTokenResponse.json();
+
+//         // Process the payment
+//         let paymentResponse = await axios.post(`${ckoAPI}/payments`, {
+//             method: 'POST',
+//             headers: {
+//                 'Authorization': `sk_${ckoSK}`,
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({
+//                 source: {
+//                     token: checkoutToken.token_data
+//                 },
+//                 amount: 1000,
+//                 currency: "USD"
+//             })
+//         });
+//         console.error("payment")
+//         console.log(paymentResponse)
+
+
+// // router.post("/pay", async (request, response) => {
+// //     // Get the URL from the front end
+// //     const { version, data, signature, header } = request.body.token.paymentData;
+
+// //     let checkoutToken = await cko.tokens.request({
+// //         type: "applepay",
+// //         token_data:{
+// //          version: version,
+// //          data: data,
+// //          signature: signature,
+// //          header:{
+// //               ephemeralPublicKey: header.ephemeralPublicKey,
+// //               publicKeyHash: header.publicKeyHash,
+// //               transactionId: header.transactionId
+// //          }
+// //         }
+// //     });
+
+// //     const payment = await cko.payments.request({
+// //     source:{
+// //         token: checkoutToken.token_data
+// //     },
+// //         amount: 1000,
+// //         currency: "USD"
+// //     });
+//         if (!paymentResponse.ok) {
+//             throw new Error(`Error processing payment: ${paymentResponse.statusText}`);
+//         }
+
+//         let payment = await paymentResponse.json();
+//         console.log(payment);
+//         response.send(payment);
+//     } catch (error) {
+//         console.error('Error:', error);
+//         response.status(500).send(error.message);
+// }
+// }
+// );
 
 module.exports = router;
