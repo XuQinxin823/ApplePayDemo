@@ -93,7 +93,8 @@ router.post("/pay", async (request, response) => {
                 token: checkoutTokenResponse.token
             },
             amount: 1000,
-            currency: "USD"
+            currency: "USD",
+            processing_channel_id: "pc_zs5fqhybzc2e3jmq3efvybybpq"
         });
         console.error("payment");
         console.error(payment);
