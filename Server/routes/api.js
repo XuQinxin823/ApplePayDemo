@@ -80,6 +80,8 @@ router.post("/pay", async (request, response) => {
                 }
             })
         });
+        console.error("checkoutTokenResponse")
+        console.log(checkoutTokenResponse);
 
         if (!checkoutTokenResponse.ok) {
             throw new Error(`Error creating token: ${checkoutTokenResponse.statusText}`);
@@ -102,6 +104,8 @@ router.post("/pay", async (request, response) => {
                 currency: "USD"
             })
         });
+        console.error("payment")
+        console.log(paymentResponse)
 
 
 // router.post("/pay", async (request, response) => {
