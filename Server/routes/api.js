@@ -6,9 +6,9 @@ var express = require("express");
 var path = require("path");
 var router = express.Router();
 const ckoAPI = 'https://api.sandbox.checkout.com'; // Replace with the correct API endpoint
-const ckoSK = 'sbox_fml2lnajshvyzujlntuunbg7iay'; // Replace with your Checkout.com secret key
+//const ckoSK = 'sbox_fml2lnajshvyzujlntuunbg7iay'; // Replace with your Checkout.com secret key
 
-//var cko = new Checkout("sk_sbox_fml2lnajshvyzujlntuunbg7iay",{pk:"pk_sbox_mbqioufmvwkamz3jjewh7o5aji#"});
+var cko = new Checkout("sk_sbox_fml2lnajshvyzujlntuunbg7iay",{pk:"pk_sbox_mbqioufmvwkamz3jjewh7o5aji#"});
 
 // Display the HTML page by default
 router.get("/", (request, response) => {
@@ -60,13 +60,14 @@ router.post("/pay", async (request, response) => {
 
     try {
         // Request an Apple Pay token
-        let checkoutTokenResponse = await axios.post(`${ckoAPI}/tokens`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `sk_${ckoSK}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+        let checkoutTokenResponse = await cko.tokens.request({
+        // let checkoutTokenResponse = await axios.post(`${ckoAPI}/tokens`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Authorization': `sk_${ckoSK}`,
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({
                 type: "applepay",
                 token_data: {
                     version: version,
@@ -78,8 +79,7 @@ router.post("/pay", async (request, response) => {
                         transactionId: header.transactionId
                     }
                 }
-            })
-        });
+            });
         console.error("checkoutTokenResponse")
         console.log(checkoutTokenResponse);
 
