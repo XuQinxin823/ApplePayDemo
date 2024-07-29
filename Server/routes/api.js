@@ -5,7 +5,7 @@ const fs = require("fs");
 var express = require("express");
 var path = require("path");
 var router = express.Router();
-const ckoAPI = 'https://api.sandbox.checkout.com/'; // Replace with the correct API endpoint
+const ckoAPI = 'https://api.sandbox.checkout.com'; // Replace with the correct API endpoint
 const ckoSK = 'sbox_fml2lnajshvyzujlntuunbg7iay'; // Replace with your Checkout.com secret key
 
 //var cko = new Checkout("sk_sbox_fml2lnajshvyzujlntuunbg7iay",{pk:"pk_sbox_mbqioufmvwkamz3jjewh7o5aji#"});
