@@ -90,7 +90,7 @@ router.post("/pay", async (request, response) => {
         
         const payment = cko.payments.request({
             source: {
-                token: checkoutToken.token_data
+                token: checkoutTokenResponse.token
             },
             amount: 1000,
             currency: "USD"
