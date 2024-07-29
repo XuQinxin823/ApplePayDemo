@@ -92,7 +92,7 @@ router.post("/pay", async (request, response) => {
             source: {
                 token: checkoutTokenResponse.token
             },
-            amount: 1000,
+            amount: 100,
             currency: "USD",
             processing_channel_id: "pc_scd3wmeis4oevodpoaoridge64"
         });
