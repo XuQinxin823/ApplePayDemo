@@ -7,13 +7,14 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // API routes
-const apiRoutes = require('./routes/api');
+const apiRoutes = require('./routes/api.js');
 app.use('/api', apiRoutes);
 
 // Serve static files from the 'frontend' directory
 app.use(express.static('Frontend'));
 
 app.get('/', (req, res) => {
+  console.error(`load index`);
   res.sendFile(__dirname + '/Frontend/index.html');
 });
 

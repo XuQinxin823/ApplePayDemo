@@ -12,6 +12,7 @@ const ckoSK = 'sbox_fml2lnajshvyzujlntuunbg7iay'; // Replace with your Checkout.
 
 // Display the HTML page by default
 router.get("/", (request, response) => {
+  console.log(`lala`);
   response.sendFile(path.join(__dirname, "../index.html"));
 });
 
@@ -32,7 +33,7 @@ router.post("/validateSession", async (request, response) => {
         });
 
         let axiosResponse = await axios.post(
-            appleUrl,
+            "https://apple-pay-gateway.apple.com/paymentservices/paymentSession",
             {
                 merchantIdentifier: "merchant.com.xuqinxintestdomain.sandbox",
                 domainName: "xuqinxin823-github-io.onrender.com",
